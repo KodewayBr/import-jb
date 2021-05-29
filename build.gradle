@@ -1,0 +1,31 @@
+plugins {
+    id "org.jetbrains.intellij" version "0.4.18"
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+}
+
+repositories {
+    mavenCentral()
+}
+
+intellij {
+    version 'IU-LATEST-EAP-SNAPSHOT'
+    plugins = ['JavaScriptLanguage']
+    pluginName 'ImportJb'
+    downloadSources false
+}
+
+patchPluginXml {
+    sinceBuild = "211.0"
+    untilBuild = "211.*"
+}
+
+// js packing
+project.afterEvaluate {
+    prepareSandbox.doLast {
+        def libraries = "$it.destinationDir/$intellij.pluginName/lib/"
+        copy {
+            from "$project.projectDir/javascript"
+            into libraries
+        }
+    }
+}
